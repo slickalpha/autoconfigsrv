@@ -1,6 +1,6 @@
 # autoconfigsrv - RC plugin to fetch DNS SRV records
 
-Roundcube plugin is an easy fix to fetch DNS SRV records following RFC 6186 and 6764 for hosts and webdav. PR welcome.
+Roundcube plugin to fetch DNS SRV records following RFC 6186 and 6764 for hosts and webdav. PR welcome.
 
 
 # Installation
