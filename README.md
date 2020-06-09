@@ -18,7 +18,7 @@ Download the folder 'autoconfigsrv' and paste it in 'plugins' directory of Round
 
 # Configuration
 
-Create `config.inc.php` file in <Your-roundcube-install-basepath>/plugins/autoconfigsrv:
+Edit `config.inc.php` file in <Your-roundcube-install-basepath>/config directory:
 
 ```php
 <?php
