@@ -18,7 +18,7 @@ Download the folder 'autoconfigsrv' and paste it in 'plugins' directory of Round
 
 # Configuration
 
-Edit `config.inc.php` file in <Your-roundcube-install-basepath>/plugins/rc_hcaptcha:
+Create `config.inc.php` file in <Your-roundcube-install-basepath>/plugins/autoconfigsrv:
 
 ```php
 <?php
