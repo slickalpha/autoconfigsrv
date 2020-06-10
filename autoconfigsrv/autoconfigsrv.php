@@ -7,9 +7,10 @@
  * @license GNU GPLv3+
  * @author Ajay Singh
  */
- 
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 class autoconfigsrv extends rcube_plugin {
-	
 	public function init() {
 		$this->load_config();
 		$rcmail = rcmail::get_instance();
@@ -23,8 +24,8 @@ class autoconfigsrv extends rcube_plugin {
 
 	public function authenticate($args) {
 		$rcmail = rcmail::get_instance();
-		if(isset($_POST) && isset($_POST['_task']) && $_POST['_task']=='login' && isset($_POST['_user']) && ($regx = $rcmail->config->get('autoconfigsrv_host_regex')) && ($ehost = $this->get_ehost($_POST['_user'], $regx)) && is_array($ehost) && isset($ehost['imaps'])) {
-			$args['host'] = (($rcmail->config->get('autoconfigsrv_imap_host_prefix') && $rcmail->config->get('autoconfigsrv_imap_host_prefix')!='') ? $rcmail->config->get('autoconfigsrv_imap_host_prefix') : 'ssl').'://'.$ehost['imaps'];
+		if(isset($_POST) && isset($_POST['_task']) && $_POST['_task']=='login' && isset($_POST['_user']) && ($regx = $rcmail->config->get('autoconfigsrv_host_regex')) && ($ehost = $this->get_ehost('_imaps._tcp', $_POST['_user'], $regx, $rcmail->config->get('autoconfigsrv_use_authoritative_ns')))) {
+			$args['host'] = (($rcmail->config->get('autoconfigsrv_imap_host_prefix') && $rcmail->config->get('autoconfigsrv_imap_host_prefix')!='') ? $rcmail->config->get('autoconfigsrv_imap_host_prefix') : 'ssl').'://'.$ehost;
 		}
 		return $args;
 	}
@@ -32,24 +33,40 @@ class autoconfigsrv extends rcube_plugin {
 	public function smtp_connect($args) {
 		$rcmail = rcmail::get_instance();
 		$identity = $rcmail->user->get_identity(); 
-		if(isset($identity['email']) && ($regx = $rcmail->config->get('autoconfigsrv_host_regex')) && ($ehost = $this->get_ehost($identity['email'], $regx)) && is_array($ehost) && isset($ehost['smtp'])) {
-			$args['smtp_server'] = (($rcmail->config->get('autoconfigsrv_smtp_host_prefix') && $rcmail->config->get('autoconfigsrv_smtp_host_prefix')!='') ? $rcmail->config->get('autoconfigsrv_smtp_host_prefix') : 'ssl').'://'.$ehost['smtp'];
+		if(isset($identity['email']) && ($regx = $rcmail->config->get('autoconfigsrv_host_regex')) && ($ehost = $this->get_ehost('_submission._tcp', $identity['email'], $regx, $rcmail->config->get('autoconfigsrv_use_authoritative_ns')))) {
+			$args['smtp_server'] = (($rcmail->config->get('autoconfigsrv_smtp_host_prefix') && $rcmail->config->get('autoconfigsrv_smtp_host_prefix')!='') ? $rcmail->config->get('autoconfigsrv_smtp_host_prefix') : 'ssl').'://'.$ehost;
 		}
 		return $args;
     }
 	
-	public function get_ehost($email, $regex=false) {
+	public function get_ehost($sub_r, $email, $regex=false, $authoritative_ns=false) {
 		if((filter_var($email, FILTER_SANITIZE_EMAIL)==$email) ? filter_var($email, FILTER_VALIDATE_EMAIL) : false) {
 			$host = explode("@", $email)[1];
 			if($this->url_validate("http://".$host) && checkdnsrr(idn_to_ascii($host, 0, INTL_IDNA_VARIANT_UTS46), "MX")) {
 				$hostd = array();
-				if(($imap_r = dns_get_record('_imaps._tcp.'.$host, DNS_SRV)) && is_array($imap_r) && isset($imap_r[0]['target']) && $this->url_validate("http://".$imap_r[0]['target']) && (($regex) ? preg_match("/$regex/i", $imap_r[0]['target']) : false)) {
-					$hostd['imaps'] = $imap_r[0]['target'];
+				
+				if($authoritative_ns!==false) {  
+					require_once 'Net/DNS.php';
+					if(($ns_q = dns_get_record($host, DNS_NS)) && is_array($ns_q) && isset($ns_q[0]['target'])) {
+						$r = new Net_DNS_Resolver(array('nameservers' => array($ns_q[0]['target'])));
+						$rec = $r->query($sub_r.'.'.$host, 'SRV');
+						
+						if($rec->answer && is_array($rec->answer) && count($rec->answer)>0) {
+							$rdata = array();
+							foreach($rec->answer as $k => $d) {
+								$rdata[$k] = (array) $d;
+							}
+						}
+						else return false;
+					} else return false;
 				}
-				if(($smtp_r = dns_get_record('_submission._tcp.'.$host, DNS_SRV)) && is_array($smtp_r) && isset($smtp_r[0]['target']) && $this->url_validate("http://".$smtp_r[0]['target']) && (($regex) ? preg_match("/$regex/i", $smtp_r[0]['target']) : false)) {
-					$hostd['smtp'] = $smtp_r[0]['target'];
+				else {
+					$rdata = dns_get_record($sub_r.'.'.$host, DNS_SRV);
 				}
-				return $hostd;
+				
+				if($rdata && is_array($rdata) && isset($rdata[0]['target']) && $this->url_validate("http://".$rdata[0]['target']) && (($regex) ? preg_match("/$regex/i", $rdata[0]['target']) : false)) {
+					return $rdata[0]['target'];
+				} else return false;
 			} else return false;
 		} else return false;
 	}
@@ -64,4 +81,3 @@ class autoconfigsrv extends rcube_plugin {
 		return (gethostbyname($url["host"]) != $url["host"]);
 	}
 }
-
