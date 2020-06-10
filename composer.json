@@ -2,8 +2,9 @@
     "name": "slickalpha/autoconfigsrv",
     "type": "roundcube-plugin",
     "description": "Roundcube plugin to fetch DNS SRV records following RFC 6186 and 6764 for hosts and webdav",
-    "license": "GPLv3+",
-    "version": "1.0",
+    "keywords": ["roundcube","autoconfig", "email"],
+    "license": "GPL-3.0-or-later",
+    "version": "1.1",
     "authors": [
         {
             "name": "Ajay Singh"
