@@ -50,4 +50,5 @@ RFC 6764 - https://tools.ietf.org/html/rfc6764
 # To Do
 
 1. Follow RFC to add dav, pop3 and else
-2. Use weights and priorities to handle multiple entries
+2. Use weights and priorities to handle multiple entries (rfc2782)
+3. To check whether host is a FQDN
