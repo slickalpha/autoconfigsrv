@@ -13,7 +13,9 @@ Plugin name is "slickalpha/autoconfigsrv"
 
 ### 2. Manual ###
 
-Download the folder 'autoconfigsrv' and paste it in 'plugins' directory of Roundcube installation
+1. Copy the folder 'autoconfigsrv' and paste it in 'plugins' directory of Roundcube installation. 
+2. Browse folder on terminal and run 'php composer.phar update' to download dependencies.
+3. Update config.inc.php to include plugin, and configure additional options as shown below.
 
 
 # Configuration
