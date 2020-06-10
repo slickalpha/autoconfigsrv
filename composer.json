@@ -25,6 +25,6 @@
         "roundcube/plugin-installer": ">=0.1.3"
     },
     "require-dev": {
-        "pear-pear.php.net/Net_DNS": "1.0.7" 
+        "pear-pear.php.net/net_dns": "1.0.7" 
     }
 }
