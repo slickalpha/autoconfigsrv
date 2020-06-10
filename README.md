@@ -51,4 +51,3 @@ RFC 6764 - https://tools.ietf.org/html/rfc6764
 
 1. Follow RFC to add dav, pop3 and else
 2. Use weights and priorities to handle multiple entries
-3. Use a netdns2-like library to add option to fetch DNS record from authoritative nameservers
