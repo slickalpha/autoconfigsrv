@@ -5,13 +5,7 @@ Roundcube plugin to fetch DNS SRV records following RFC 6186 and 6764 for hosts 
 
 # Installation
 
-### 1. Composer ###
-
-See "Getting Started" on [https://plugins.roundcube.net/](https://plugins.roundcube.net/)
-
-Plugin name is "slickalpha/autoconfigsrv"
-
-### 2. Manual ###
+### Using composer ###
 
 1. Copy the folder 'autoconfigsrv' and paste it in 'plugins' directory of Roundcube installation. 
 2. Browse folder on terminal and run 'php composer.phar update' to download dependencies.
