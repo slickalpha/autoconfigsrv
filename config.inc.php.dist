@@ -12,5 +12,5 @@ $config['autoconfigsrv_smtp_host_prefix'] = 'tls';
 // Set regex to whitelist hosts fetched from SRV records (replace example.com)
 $config['autoconfigsrv_host_regex'] = '(^[a-z0-9\.]*\.example\.com)$';
 
-// Set true to fetch SRV records from given domain's authoritative nameservers
+// Set true, to fetch SRV records from host domain's nameservers
 $config['autoconfigsrv_use_authoritative_ns'] = false;
