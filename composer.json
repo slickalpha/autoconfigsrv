@@ -15,9 +15,9 @@
             "url": "https://plugins.roundcube.net"
         },
         {
-			"type": "pear",
-			"url": "https://pear.php.net"
-		}
+	     "type": "pear",
+	     "url": "https://pear.php.net"
+	}
     ],
     "require": {
         "php": ">=7.0",
