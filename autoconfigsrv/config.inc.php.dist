@@ -1,0 +1,16 @@
+<?php
+
+
+// Set default hosts to autoconfigsrv. Use both or either one.
+$config['default_host'] = 'autoconfigsrv';
+$config['smtp_server'] = 'autoconfigsrv';
+
+// Set prefix for hosts; Default 'ssl'
+$config['autoconfigsrv_imap_host_prefix'] = 'ssl';
+$config['autoconfigsrv_smtp_host_prefix'] = 'tls';
+
+// Set regex to whitelist hosts fetched from SRV records (replace example.com)
+$config['autoconfigsrv_host_regex'] = '(^[a-z0-9\.]*\.example\.com)$';
+
+// Set true to fetch SRV records from given domain's authoritative nameservers
+$config['autoconfigsrv_use_authoritative_ns'] = false;
