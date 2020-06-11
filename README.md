@@ -49,6 +49,7 @@ RFC 6764 - https://tools.ietf.org/html/rfc6764
 
 # To Do
 
-1. Follow RFC to add dav, pop3 and else
+1. Change DNS library or update pear libray. (To make sure no DNS fetch requests fail)
 2. Use weights and priorities to handle multiple entries (rfc2782)
 3. To check whether host is a FQDN
+4. Follow RFC to add pop3s and else
